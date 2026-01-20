@@ -1,0 +1,50 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Code block styling */
+.code-block {
+  font-family: 'Fira Code', 'Monaco', 'Consolas', monospace;
+  background-color: #1e1e1e;
+  color: #d4d4d4;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  overflow-x: auto;
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+/* Status badges */
+.status-open {
+  @apply bg-green-100 text-green-800;
+}
+
+.status-escalated {
+  @apply bg-yellow-100 text-yellow-800;
+}
+
+.status-closed {
+  @apply bg-gray-100 text-gray-800;
+}
