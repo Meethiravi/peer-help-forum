@@ -22,7 +22,7 @@ A peer-first triage system for programming education, where students can ask que
 - **Frontend**: React + Vite + Tailwind CSS
 - **Backend**: Python FastAPI
 - **Database**: SQLite
-- **AI Judge**: Mock (can be configured for Gemini or Claude API)
+- **AI Judge**: Gemini API(model: gemini-3-flash-preview)
 
 ## Project Structure
 
@@ -60,10 +60,6 @@ peer-help-forum/
 
 ```bash
 cd backend
-
-# Create virtual environment (optional but recommended)
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
 
 # Install dependencies
 pip install -r requirements.txt
@@ -135,17 +131,7 @@ The system comes pre-seeded with these users:
 
 ## AI Judge Configuration
 
-By default, the system uses a mock AI judge with heuristic rules. To use real AI:
-
-```bash
-# Configure via API
-curl -X POST "http://localhost:8000/api/config/ai?api_key=YOUR_KEY&provider=gemini"
-```
-
-Supported providers:
-- `mock` - Default, uses heuristics
-- `gemini` - Google Gemini API
-- `claude` - Anthropic Claude API
+By default, the system uses a mock AI judge with heuristic rules. To use real AI, add your Gemini API key as an env variable with the name "GEMINI_API_KEY".
 
 ## AI Evaluation Criteria
 
@@ -172,7 +158,7 @@ Responses are evaluated against:
 
 ## Screenshots
 
-(Add screenshots of your running application here)
+(Add screenshots here)
 
 ## Based On
 
@@ -180,7 +166,3 @@ This project implements the "Peer-First Triage System" proposed for improving st
 
 1. **AVT (Assessment via Teaching)** - Malik et al., SIGCSE 2024
 2. **Closing the Loop** - Phung et al., 2025
-
-## License
-
-MIT License
