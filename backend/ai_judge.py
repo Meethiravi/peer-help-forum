@@ -48,7 +48,6 @@ class GeminiJudge:
         self._init_csv()
     
     def _init_csv(self):
-        """Initialize CSV file with headers if it doesn't exist."""
         if not os.path.exists(CSV_FILE):
             with open(CSV_FILE, 'w', newline='', encoding='utf-8') as f:
                 writer = csv.writer(f)
@@ -78,7 +77,6 @@ class GeminiJudge:
         raw_response: str,
         evaluation: AIEvaluation
     ):
-        """Log the evaluation to CSV file."""
         try:
             with open(CSV_FILE, 'a', newline='', encoding='utf-8') as f:
                 writer = csv.writer(f)
@@ -99,7 +97,6 @@ class GeminiJudge:
             print(f"Error writing to CSV: {e}")
     
     def _initialize(self):
-        """Initialize the Gemini client."""
         try:
             from google import genai
             if self.api_key and self.api_key != "YOUR_GEMINI_API_KEY_HERE":
@@ -111,7 +108,7 @@ class GeminiJudge:
             print("google-genai not installed. Run: pip install google-genai")
         except Exception as e:
             print(f"Failed to initialize Gemini: {e}")
-            print("   Make sure GEMINI_API_KEY environment variable is set.")
+            print("Make sure GEMINI_API_KEY environment variable is set.")
     
     def evaluate_response(
         self,
@@ -122,11 +119,6 @@ class GeminiJudge:
         hint_guidance: str,
         what_to_try_next: str
     ) -> AIEvaluation:
-        """
-        Evaluate a peer response using Gemini.
-        Falls back to mock evaluation if Gemini is not available.
-        Logs all evaluations to CSV.
-        """
         raw_response = ""
         
         if not self.client:
@@ -161,7 +153,7 @@ class GeminiJudge:
                     concept_involved, hint_guidance, what_to_try_next
                 )
         
-        # Log to CSV
+        #Log to CSV
         self._log_to_csv(
             question_title, question_description, code_snippet,
             concept_involved, hint_guidance, what_to_try_next,
@@ -171,7 +163,6 @@ class GeminiJudge:
         return evaluation
     
     def _parse_response(self, response_text: str) -> AIEvaluation:
-        """Parse JSON response from Gemini."""
         try:
             json_match = re.search(r'\{[^{}]*\}', response_text, re.DOTALL)
             if json_match:
@@ -201,10 +192,6 @@ class GeminiJudge:
         hint_guidance: str,
         what_to_try_next: str
     ) -> AIEvaluation:
-        """
-        Fallback mock evaluation using simple heuristics.
-        Used when Gemini API is not available.
-        """
         hint_lower = hint_guidance.lower()
         
         #Check for direct solution
@@ -212,7 +199,7 @@ class GeminiJudge:
             r'def\s+\w+\s*\(',  # function definition
             r'for\s+\w+\s+in',   # for loop
             r'while\s+.*:',      # while loop
-            r'if\s+.*:\s*\n',    # if statement with newline (likely full code)
+            r'if\s+.*:\s*\n',    # if statement with newline(likely full code)
             r'return\s+\w+',     # return statement
             r'print\s*\([^)]+\)\s*\n.*print', # multiple print statements
         ]
@@ -290,11 +277,9 @@ ai_judge = GeminiJudge()
 
 
 def get_ai_judge() -> GeminiJudge:
-    """Get the AI judge instance."""
     return ai_judge
 
 
 def configure_ai_judge(api_key: str, provider: str = "gemini"):
-    """Reconfigure the AI judge with a new API key."""
     global ai_judge
     ai_judge = GeminiJudge(api_key=api_key)

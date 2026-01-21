@@ -26,7 +26,7 @@ app = FastAPI(
 #Configure CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # In production, specify actual origins
+    allow_origins=["*"],  
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -139,7 +139,7 @@ def get_questions(
 
 @app.get("/api/questions/{question_id}", response_model=Question)
 def get_question(question_id: int):
-    """Get a specific question by ID."""
+    #Get a specific question by ID
     conn = get_connection()
     cursor = conn.cursor()
     cursor.execute("""
@@ -158,7 +158,7 @@ def get_question(question_id: int):
 
 @app.post("/api/questions", response_model=Question)
 def create_question(question: QuestionCreate, student_id: int = Query(...)):
-    """Create a new question."""
+    #Create a new question
     conn = get_connection()
     cursor = conn.cursor()
     
@@ -176,7 +176,7 @@ def create_question(question: QuestionCreate, student_id: int = Query(...)):
     conn.commit()
     question_id = cursor.lastrowid
     
-    # Fetch the created question
+    #Fetch the created question
     cursor.execute("""
         SELECT q.*, u.name as student_name, c.name as category_name, 0 as response_count
         FROM questions q
@@ -190,7 +190,7 @@ def create_question(question: QuestionCreate, student_id: int = Query(...)):
 
 @app.patch("/api/questions/{question_id}/status")
 def update_question_status(question_id: int, status: QuestionStatus):
-    """Update question status (escalate or close)."""
+    #Update question status(escalate or close)
     conn = get_connection()
     cursor = conn.cursor()
     cursor.execute("UPDATE questions SET status = ? WHERE id = ?", (status.value, question_id))
@@ -203,7 +203,7 @@ def update_question_status(question_id: int, status: QuestionStatus):
 
 @app.post("/api/questions/{question_id}/escalate")
 def escalate_question(question_id: int):
-    """Escalate a question to instructors (student clicks 'I still need help')."""
+    #Escalate a question to instructors(student clicks 'I still need help')
     conn = get_connection()
     cursor = conn.cursor()
     cursor.execute("UPDATE questions SET status = 'escalated' WHERE id = ?", (question_id,))
@@ -218,7 +218,7 @@ def escalate_question(question_id: int):
 
 @app.get("/api/questions/{question_id}/responses", response_model=List[Response])
 def get_responses(question_id: int, include_hidden: bool = False):
-    """Get all responses for a question."""
+    #Get all responses for a question
     conn = get_connection()
     cursor = conn.cursor()
     
@@ -239,7 +239,7 @@ def get_responses(question_id: int, include_hidden: bool = False):
 
 @app.post("/api/responses", response_model=Response)
 def create_response(response: ResponseCreate, responder_id: int = Query(...)):
-    """Create a new peer response (automatically evaluated by AI)."""
+    #Create a new peer response(evaluated by AI)
     conn = get_connection()
     cursor = conn.cursor()
     
@@ -314,7 +314,7 @@ def create_response(response: ResponseCreate, responder_id: int = Query(...)):
 
 @app.get("/api/users/{user_id}/responses", response_model=List[Response])
 def get_user_responses(user_id: int):
-    """Get all responses made by a user."""
+    #Get all responses made by a user
     conn = get_connection()
     cursor = conn.cursor()
     cursor.execute("""
@@ -332,7 +332,7 @@ def get_user_responses(user_id: int):
 
 @app.get("/api/questions/{question_id}/instructor-answer")
 def get_instructor_answer(question_id: int):
-    """Get instructor answer for a question."""
+    #Get instructor answer for a question
     conn = get_connection()
     cursor = conn.cursor()
     cursor.execute("""
@@ -349,7 +349,7 @@ def get_instructor_answer(question_id: int):
 
 @app.post("/api/instructor-answers", response_model=InstructorAnswer)
 def create_instructor_answer(answer: InstructorAnswerCreate, instructor_id: int = Query(...)):
-    """Create an instructor answer and close the question."""
+    #Create an instructor answer and close the question
     conn = get_connection()
     cursor = conn.cursor()
     
@@ -388,7 +388,7 @@ def create_instructor_answer(answer: InstructorAnswerCreate, instructor_id: int 
 
 @app.get("/api/analytics/karma-leaderboard", response_model=List[KarmaLeaderboard])
 def get_karma_leaderboard():
-    """Get karma leaderboard for all students."""
+    #Get karma leaderboard for all students
     conn = get_connection()
     cursor = conn.cursor()
     cursor.execute("""
@@ -408,7 +408,7 @@ def get_karma_leaderboard():
 
 @app.get("/api/analytics/dashboard", response_model=AnalyticsDashboard)
 def get_analytics_dashboard():
-    """Get comprehensive analytics for instructors."""
+    #Get comprehensive analytics for instructors
     conn = get_connection()
     cursor = conn.cursor()
     
@@ -431,7 +431,7 @@ def get_analytics_dashboard():
         helpful_percentage=round(helpful_percentage, 1)
     )
     
-    # Average resolution time (for closed questions)
+    #Average resolution time (for closed questions)
     cursor.execute("""
         SELECT AVG(
             (julianday(ia.created_at) - julianday(q.created_at)) * 24
@@ -458,7 +458,7 @@ def get_analytics_dashboard():
     """)
     category_stats = [dict(c) for c in cursor.fetchall()]
     
-    # Common misconceptions (based on unhelpful response patterns by category)
+    #Common misconceptions (based on unhelpful response patterns by category)
     
     cursor.execute("""
         SELECT 
@@ -487,7 +487,7 @@ def get_analytics_dashboard():
 
 @app.get("/api/analytics/all-responses", response_model=List[Response])
 def get_all_responses(include_hidden: bool = True):
-    """Get all responses (for instructor review)."""
+    #Get all responses (for instructor review)
     conn = get_connection()
     cursor = conn.cursor()
     
@@ -509,8 +509,8 @@ def get_all_responses(include_hidden: bool = True):
 
 @app.post("/api/config/ai")
 def configure_ai(api_key: str, provider: str = "gemini"):
-    """Configure the AI judge (gemini or claude)."""
-    if provider not in ["gemini", "claude", "mock"]:
+    #Configure the AI judge (gemini or claude)
+    if provider not in ["gemini", "mock"]:
         raise HTTPException(status_code=400, detail="Provider must be 'gemini' or 'mock'")
     configure_ai_judge(api_key=api_key, provider=provider)
     return {"message": f"AI judge configured to use {provider}"}
@@ -519,7 +519,7 @@ def configure_ai(api_key: str, provider: str = "gemini"):
 
 @app.get("/api/health")
 def health_check():
-    """Health check endpoint."""
+    #Health check endpoint
     return {"status": "healthy", "timestamp": datetime.now().isoformat()}
 
 if __name__ == "__main__":

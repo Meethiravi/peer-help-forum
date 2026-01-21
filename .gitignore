@@ -1,5 +1,5 @@
 # Dependencies
-node_modules/
+frontend/node_modules/
 
 # Logs
 logs/
@@ -20,13 +20,13 @@ build/
 .out/
 .next/
 coverage/
-forum.db
+backend/forum.db
 
 # Cache directories
 .cache/
 .npm/
 .pnpm-store/
-_pycache_/
+backend/_pycache_/
 
 # OS files
 .DS_Store
@@ -41,6 +41,6 @@ Thumbs.db
 coverage/
 
 # Optional: lockfiles (UNCOMMENT if you don't want them)
-package-lock.json
-yarn.lock
+frontend/package-lock.json
+frontend/yarn.lock
 pnpm-lock.yaml

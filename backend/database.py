@@ -14,7 +14,7 @@ def init_database():
     conn = get_connection()
     cursor = conn.cursor()
     
-    # Create Users table
+    #Create Users table
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS users (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -25,7 +25,7 @@ def init_database():
         )
     """)
     
-    # Create Categories table
+    #Create Categories table
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS categories (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -33,7 +33,7 @@ def init_database():
         )
     """)
     
-    # Create Questions table
+    #Create Questions table
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS questions (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -49,7 +49,7 @@ def init_database():
         )
     """)
     
-    # Create Responses table (peer responses)
+    #Create Responses table(peer responses)
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS responses (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -68,7 +68,7 @@ def init_database():
         )
     """)
     
-    # Create InstructorAnswers table
+    #Create InstructorAnswers table
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS instructor_answers (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -88,13 +88,13 @@ def seed_data():
     conn = get_connection()
     cursor = conn.cursor()
     
-    # Check if data already exists
+    #Check if data already exists
     cursor.execute("SELECT COUNT(*) FROM users")
     if cursor.fetchone()[0] > 0:
         conn.close()
         return
     
-    # Seed Users (Students and Instructors)
+    #Seed Users
     users = [
         ("Riya", "instructor"),
         ("Amit", "instructor"),
@@ -107,7 +107,7 @@ def seed_data():
     ]
     cursor.executemany("INSERT INTO users (name, role) VALUES (?, ?)", users)
     
-    # Seed Categories
+    #Seed Categories
     categories = [
         ("Variables",),
         ("Loops",),
